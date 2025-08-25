@@ -1,0 +1,68 @@
+.bolt-icon{
+	height:55px;
+	width:55px;
+	line-height:55px;
+	text-align:center;
+	min-width:55px;
+	display:block;
+	background:rgba($primary,0.1);
+	font-size:25px;
+	color:$primary;
+	border-radius:5rem;
+	@include respond ('phone'){
+		height:45px;
+		width:45px;
+		line-height:45px;
+		min-width:45px;
+	}
+}
+.project-bx{
+	.title{
+		font-size:20px;
+	}
+	.img-2{
+		width:55px;
+	}
+	@include respond ('phone'){
+		.title{
+			font-size:15px;
+		}
+		.img-2{
+			width:45px;
+		}
+	}
+}
+
+.grid-tabs{
+	border:0;
+	margin-left: 20px;
+	.nav-link{
+		border:0;
+		svg path{
+			fill:#CBCBCB;
+		}
+		&.active{
+			svg path{
+				fill:$primary;
+			}
+		}
+	}
+}
+
+.project-boxed{
+	overflow:hidden;
+	.list-group-flush{
+		.list-group-item{
+			padding: 0.5rem 1.5rem;
+			font-size: 14px;
+		}
+	}
+	.img-bx{
+		position:relative;
+		.badge{
+			position:absolute;
+			bottom:15px;
+			right:15px;
+		}
+	}
+}

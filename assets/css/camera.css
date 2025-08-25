@@ -1,0 +1,118 @@
+/* Contenedor del video */
+#video {
+    border-radius: 55px;
+}
+
+#countdown {
+    font-size: 60px;
+    font-weight: bold;
+    color: #eeeeee;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Overlay */
+/* Overlay */
+.overlay {
+    --border-style: 2px solid #eeeeee;
+    --border-space: 20px; /* Espacio desde el borde del video */
+
+    position: absolute;
+    top: var(--border-space);
+    left: var(--border-space);
+    right: var(--border-space);
+    bottom: var(--border-space);
+
+    /* Se ajusta automáticamente al tamaño del contenedor (video-container) */
+    width: auto;
+    height: auto;
+
+    pointer-events: none; /* No bloquea clics */
+    z-index: 99;
+}
+
+/* Elementos del overlay */
+.overlay-element {
+    position: absolute;
+    width: 20%; /* Longitud horizontal de cada esquina */
+    height: 15%; /* Altura vertical de cada esquina */
+}
+
+/* Esquinas */
+.overlay .top-left {
+    border-left: var(--border-style);
+    border-top: var(--border-style);
+    top: 0;
+    left: 0;
+}
+
+.overlay .top-right {
+    border-right: var(--border-style);
+    border-top: var(--border-style);
+    top: 0;
+    right: 0;
+}
+
+.overlay .bottom-left {
+    border-left: var(--border-style);
+    border-bottom: var(--border-style);
+    bottom: 0;
+    left: 0;
+}
+
+.overlay .bottom-right {
+    border-right: var(--border-style);
+    border-bottom: var(--border-style);
+    bottom: 0;
+    right: 0;
+}
+
+
+
+
+/* Cambiar el color de los bordes con hover */
+.overlay:hover {
+    background-color: rgba(0, 0, 0, 0.3); /* Fondo semitransparente al pasar el mouse */
+}
+
+.overlay-element:hover {
+    border-color: yellow; /* Cambio de color al pasar el mouse */
+    transform: scale(1.1); /* Aumenta el tamaño de los bordes */
+}
+
+/* Animación para hacer que el overlay se expanda y contraiga */
+.overlay.expanded {
+    width: calc(100% - 2 * var(--border-space) + 50px); /* Expande el tamaño */
+    height: calc(100% - 2 * var(--border-space) + 50px);
+}
+
+/* Efecto de rotación */
+.overlay.rotated {
+    transform: translate(-50%, -50%) rotate(15deg); /* Rota el overlay */
+}
+
+/* Transición de opacidad */
+.overlay.fade-out {
+    opacity: 0; /* Hace que el overlay desaparezca */
+}
+
+/* Texto dentro del overlay */
+.overlay-text {
+    font-size: 1.75em;
+    color: white;
+    font-family: monospace;
+}
+
+#overlay-bottom-left-text {
+    position: absolute;
+    bottom: var(--border-space);
+    left: var(--border-space);
+}
+
+#overlay-bottom-right-text {
+    position: absolute;
+    bottom: var(--border-space);
+    right: var(--border-space);
+}

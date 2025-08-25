@@ -1,0 +1,48 @@
+{
+    "quicksand": {
+        "300": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/quicksand_300_2446d87df0debd67f1f7b0fc2781d430",
+        "500": "quicksand_500_ffba383f9d8eb69366f673d3e1aeffd8",
+        "bold": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/quicksand_bold_ce3112c258cd207f7669051edde1e3e9"
+    },
+    "montserrat": {
+        "100_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_100_italic_e04e1e1b987ce549d1ff75570569042f",
+        "200_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_200_italic_6debd9c3c76b51edb3b6ef4568776813",
+        "300_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_300_italic_658872a1f6d6ac67e7402b9c48b61dba",
+        "italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_italic_f777fa20b15e3156a141a7486883dc8d",
+        "500_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_500_italic_0c00725f543c93f4ae40037d0cbf8922",
+        "600_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_600_italic_3c60e1383488865a84fec839dc705cc6",
+        "bold_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_bold_italic_c315c6255ac6134d1bf4f846cb02db8f",
+        "800_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_800_italic_f97a1251c6756f2dc640e340755976a1",
+        "900_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_900_italic_1346116015e71009d0533d771c1dedca",
+        "100": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_100_208362ae179da7c775cb2843ff3dc51f",
+        "200": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_200_1ab293c9909d6903dd69bc2d73ccdd94",
+        "300": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_300_de8351b164281dd70daee9bd9acac0f7",
+        "normal": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_normal_8b39ce6f1e92b671adb8930c94175e08",
+        "500": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_500_b8456ccdc8e65e0603c780e706bb4c7b",
+        "600": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_600_4a32dc2378b50649c05087a84ee6c5f6",
+        "bold": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_bold_d6f7b66b1ae15f51f1e1cecb60246712",
+        "800": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/montserrat_800_ae3145ca5af8b5a0cea53598b80aa1c8",
+        "900": "montserrat_900_14e23053f1f07e6ad09986527b55d715"
+    },
+    "open sans": {
+        "300_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/open_sans_300_italic_945d8dd4a3efccc1bb28c16b6242db51",
+        "italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/open_sans_italic_877b1c2661afb6fd8801d8d676e92166",
+        "500_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/open_sans_500_italic_6553c22d1e76c3d4440f64b48805fc7c",
+        "600_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/open_sans_600_italic_38650afefae818658a58a3f734c27327",
+        "bold_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/open_sans_bold_italic_f909b48de15edc7e40c0cecc141c2730",
+        "800_italic": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/open_sans_800_italic_0a4825527362f06dbcf6601f5ab55f61",
+        "300": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/open_sans_300_8513b9024ad211a10e857eba11f0f357",
+        "normal": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/open_sans_normal_2bf6e8a03908d49a7fa7b1094b0c2804",
+        "500": "open_sans_500_663f11545dfeea65b44b2da12b5a66b1"
+    },
+    "font awesome 5 brands": {
+        "normal": "font_awesome_5_brands_normal_6c7b9742dc5ae85c1a4a9ff1945464dc"
+    },
+    "font awesome 5 free": {
+        "normal": "C:\\laragon\\www\\test\\aseo\\application\\libraries\\vendor\\dompdf\\dompdf\/lib\/fonts\/font_awesome_5_free_normal_53a461860a760912241c035ad97e42ed",
+        "900": "font_awesome_5_free_900_a496f8644d2cd386b5617d8f041a0ea0"
+    },
+    "roboto condensed": {
+        "normal": "roboto_condensed_normal_02f844c58012a2e721c48d57925e9618"
+    }
+}
