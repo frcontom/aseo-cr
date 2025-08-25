@@ -5,6 +5,14 @@ $(document).ready(function() {
 
 
     // Asignar filial y emitir el evento
+    $.fn.socket_comunication = function (data) {
+        return this.each(function () {
+                // Emitir el evento después de la acción
+                socket.emit("fills_form", data);
+        });
+    }
+
+    // Asignar filial y emitir el evento
     $.fn.asignar_filial = function (filial) {
         return this.each(function () {
             const data = {

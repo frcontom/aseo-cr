@@ -247,7 +247,7 @@ UNION ALL
             'timer'           => new Timer(),
             'floors'          => $this->general->all_get('floor'),
             'status'          => $this->general->query('select u_id,u_name from users where u_profile=3','obj'),
-            'filials'         => $this->general->query("select h.*,s.*,f.*,ha.*,t.reason,t2.hc_comment,CASE
+            'filials'         => $this->general->query("select h.*,s.*,f.*,ha.*,t.reason,CASE WHEN t2.hc_comment  IS NULL THEN '' ELSE 'comment'  END As hc_comment,COALESCE(tk.htc_count,0) As htc_count,CASE
                     WHEN ha.a_user = null THEN h.f_user
                      WHEN h.f_user <> ha.a_user THEN ha.a_user
                      ELSE h.f_user
@@ -258,6 +258,7 @@ UNION ALL
     LEFT JOIN house_assignment ha on h.f_id = ha.a_house AND ha.a_status_service IN(1,2,3) and ha.a_revision_status=1
     LEFT JOIN (select hb.reason,hb.house_id from house_blocked As hb order by hb.id DESC LIMIT 1) As t ON h.f_id=t.house_id
     LEFT JOIN (select cm.hc_filial,cm.hc_comment from house_assignment_comment As cm where cm.hc_status=1) As t2 ON t2.hc_filial=h.f_id
+    LEFT JOIN (select tk.hct_filial,count(tk.hct_filial) As htc_count from house_assignment_comment_task As tk WHERE tk.hrc_status=1 group by tk.hct_filial) As tk ON h.f_id=tk.hct_filial
     ",'array',false),
             'crud' => array(
                 'url_modals'    => base_url("modal/"),

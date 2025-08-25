@@ -34,7 +34,7 @@ foreach($filials as $filial){
     $id = encriptar($filial['f_id']);
     $a_id = encriptar($filial['a_id'] ?? 0);
     //info blocked filial
-    $comment_color =  ($filial['hc_comment'] == '' or $filial['hc_comment'] == null) ? 'btn-dark' : 'btn-primary  btn_effects';
+    $comment_color =  ($filial['hc_comment'] != 'comment' and $filial['htc_count'] == 0) ? 'btn-dark' : 'btn-primary  btn_effects';
     $title_blocked  = ($filial['f_status'] == 3) ?  'Desbl' : 'Bloq';
     $icon_blocked   = ($filial['f_status'] == 3)  ?  'fas fa-unlock' : 'fas fa-lock';
     $status_blocked = ($filial['f_status'] != 3)  ?  1 : 2;
@@ -83,10 +83,17 @@ foreach($filials as $filial){
 
             //validar si la filial se puede trabajar porque la tiene otro operador validar si puede ser en revision
 
-
-
+            //validar si el estado de la habitcion tiene codigo 14 par entrar a revision
             $template .= "<div class='d-flex  justify-content-between mt-3 text-cente'>";
-            $template .= " <button type='button'  class=' btn btn-info btn-sm w-50 mx-1' onclick='$(this).forms_modal({\"page\" : \"revision_filial\",\"data1\" : \"{$id}\",\"title\" : \"Finalizar Revision\"})'>Revisión1</button>";
+
+            if($filial['f_status_actual'] == 14):
+                //se reasigno y puede entrar a revision
+                $template .= " <button type='button'  class=' btn btn-info btn-sm w-50 mx-1' onclick='$(this).forms_modal({\"page\" : \"revision_filial\",\"data1\" : \"{$id}\",\"title\" : \"Finalizar Revision\"})'>Revisión1</button>";
+            else:
+                $template .= "<button type='button'  class=' btn btn-info btn-sm w-50 mx-1 disabled'>Re-Asignado</button>";
+             endif;
+
+
             $template .= "<button type='button' onclick='$(this).filial_asginar({$fiObj},2)'  class='btn btn-warning btn-sm w-50  {$btn_blocked}'>Re-Asignar</button>";
             $template .= "</div>";
         }else if($filial['a_id'] != null){

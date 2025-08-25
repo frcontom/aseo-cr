@@ -22,8 +22,6 @@ class Clean extends CI_Controller
 
         $this->user_data = $this->general->get('users',array('u_id' => $this->session_id));
     }
-
-
     function change_status(){
 
         if($this->input->post()){
@@ -89,7 +87,6 @@ class Clean extends CI_Controller
         }
         api($this->result);
     }
-
     function change_status_hand(){
 
         if($this->input->post()){
@@ -165,7 +162,11 @@ class Clean extends CI_Controller
                 $evidencia =  $this->class_security->upload_image('evidencia','_files/taks/');
 
                 //vadalidate status of assignment
-                $data = $this->general->query("select * from house As h JOIN house_assignment As hs ON h.f_id=hs.a_house WHERE h.f_id='{$id}' and hs.a_status_service IN(1,2) and hs.a_user='{$this->session_id}'",'array',true);
+                $data = $this->general->query("select h.*,hs.*,COALESCE(tk.count_tasks,0) As count_tasks from house As h
+    JOIN house_assignment As hs ON h.f_id=hs.a_house
+    LEFT JOIN (select tk.hct_filial,count(tk.hct_filial) As count_tasks from house_assignment_comment_task As tk where tk.hcr_type=2 group by tk.hct_filial) As tk ON h.f_id = tk.hct_filial
+WHERE h.f_id='{$id}' and hs.a_status_service IN(1,2) and hs.a_user='{$this->session_id}'",'array',true);
+
 //                print_r($data);exit;
                 //validate if status is in progress
                 if(isset($data) and !empty($data)){
@@ -173,6 +174,37 @@ class Clean extends CI_Controller
                     if($data['a_status_service'] == 1){
                         //cambiar el estado a en proceso
                         $actual = ['a_status_service' => 2,'a_take' => fecha(2),'a_revision_status' => 1];
+
+
+                        //Register timer of task
+                        $this->general->create('house_assignment_timer',[
+                            'ast_house'     => $id,
+                            'ast_assigned'  => $assigment,
+                            'ast_take'      => fecha(2),
+                            'ast_status'    => 1,
+                            'ast_atcreate'  => fecha(2)
+
+                        ]);
+
+
+                        //resgister tasks for default
+                        if($data['count_tasks'] == 0):
+                            //ya tiene tareas asignadas
+                        $tasks_default = $this->general->all_get('tasks',['tk_delete' => 1],[],'array');
+                            if(isset($tasks_default) and is_array($tasks_default) and count($tasks_default) >= 1){
+                                foreach ($tasks_default as $value) {
+                                    $this->general->create('house_assignment_comment_task',[
+                                        'hct_filial'     => $id,
+                                        'hcr_title'      => $value['tk_name'],
+                                        'hcr_type'       => 2,
+                                        'hrc_timer'      => fecha(2)
+                                    ]);
+                                }
+                            }
+                        endif;
+
+
+
                     }else{
 
                         //cuando la tarea finaliza entra en un nuevo estado llamado pre-finalizado
@@ -185,6 +217,14 @@ class Clean extends CI_Controller
                             'har_before_status' => $data['f_status_actual'],
 //                            'har_after_status'  => $id
                         ]);
+
+
+                        //finish timer of task
+                        $this->general->update('house_assignment_timer',['ast_house' => $id,'ast_assigned' => $data['a_id'],'ast_status' => 1,'ast_ending' => null],[
+                            'ast_ending' => fecha(2),
+                            'ast_status' => 2
+                        ]);
+
 
                         //cambiar el estado de la filial a revision
                         $this->general->update('house',array('f_id' => $id),array('f_status_actual' => 14));

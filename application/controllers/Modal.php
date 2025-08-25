@@ -113,6 +113,15 @@ LEFT JOIN (SELECT p_menu FROM permissions WHERE p_profile = '".$id."') AS p ON m
                             'icons' => $this->general->all_get('icons'),
                         ));
                     }
+                    else  if($page == 'tasks') {
+                        $id = desencriptar($data1);
+                        $datas = $this->general->get('tasks',['tk_id' => $id],'array');
+                        $this->load->view('modal/admin/v_tasks',array(
+                            'page' => $page,
+                            'id' => $data1,
+                            'datas' => $datas,
+                        ));
+                    }
 
 
                     else  if($page == 'floor') {
@@ -271,7 +280,7 @@ LEFT JOIN (SELECT p_menu FROM permissions WHERE p_profile = '".$id."') AS p ON m
 
 
                     else  if($page == 'clean_task') {
-                    echo    $id     = $this->class_security->int(desencriptar($data1));
+                        $id     = $this->class_security->int(desencriptar($data1));
                         $this->load->library('Timer');
 
                         $this->load->view('modal/clean/v_clean_tack',array(
@@ -396,9 +405,10 @@ from house_maintence As h
 
                     //comment_view_filial
                     else  if($page == 'comment_response_filial') {
-
                         //validate is encrypt or not
                          $id =  (strlen($data1) > 10 ? desencriptar($data1) : '');
+
+
                         $this->load->view('modal/v_comment_response_filial',array(
                             'page'         => $page,
                             'id'           => $id,
@@ -410,7 +420,9 @@ from house As h
    LEFT JOIN users As u ON cm.hc_user=u.u_id
 where ha.a_house='".$id."' AND ha.a_status_service IN(1,2)",'array',true),
 //                            'datas'         => $this->general->query("select * from house_assignment_comment As cm  JOIN users As u ON cm.hc_user=u.u_id where cm.hc_status=1 and cm.hc_filial='".$id."' order by cm.hc_id DESC LIMIT 1",'array',true),
-                            'tasks'         => $this->general->all_get('house_assignment_comment_task',['hct_filial' => $id,'hrc_status' => 1],[],'array')
+                            'tasks'         => $this->general->all_get('house_assignment_comment_task',['hct_filial' => $id,'hrc_status' => 1],[],'array'),
+                            'tasks_create_2'         => $this->general->all_get('house_assignment_comment_task',['hct_filial' => $id,'hcr_type' => 2],[],'array'),
+                            'tasks_default'         => $this->general->all_get('tasks',['tk_delete' => 1],[],'array')
                         ));
                     }
 
@@ -418,7 +430,7 @@ where ha.a_house='".$id."' AND ha.a_status_service IN(1,2)",'array',true),
 
                         //validate is encrypt or not
                         $id =  (strlen($data1) > 10 ? desencriptar($data1) : '');
-                      $data = $this->general->query("select *
+                      $data = $this->general->query("select h.*,fl.*,ha.*,hr.*,cm.*,u.u_name As 'user_asigne',t.u_name As 'user_resolved'
 from house As h
     JOIN floor As fl ON h.f_floor=fl.fr_id
     JOIN house_assignment As ha ON h.f_id=ha.a_house
@@ -435,13 +447,26 @@ where h.f_id='".$id."' and h.f_status_actual=14 AND ha.a_status_service=3",'arra
                             'page'         => $page,
                             'id'           => $id,
                             'datas'  => $data,
-//                            'datas'         => $this->general->query("select * from house_assignment_comment As cm  JOIN users As u ON cm.hc_user=u.u_id where cm.hc_status=1 and cm.hc_filial='".$id."' order by cm.hc_id DESC LIMIT 1",'array',true),
+                            'timer_task'    => $this->general->query("SELECT COALESCE(SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND, ast_take, ast_ending))),'00:00:00') AS total_time FROM house_assignment_timer WHERE ast_house='{$id}' and ast_assigned='{$a_id}' and  ast_status = 2;",'array',true),
                             'tasks'         => $this->general->all_get('house_assignment_comment_task',['hct_filial' => $id,'hct_assignment'=>$a_id],[],'array')
                         ));
                     }
 
 
 
+
+                    else  if($page == 'comment_asigne_filial') {
+
+                        //validate is encrypt or not
+                        $id =  (strlen($data1) > 10 ? desencriptar($data1) : '');
+                        $this->load->view('modal/v_asigne_comment_filial',array(
+                            'page'         => $page,
+                            'id'           => $id,
+                            'datasComment'  => $this->general->query("select u.u_name,h.f_name,ha.a_observation_clean,ha.a_ending from house As h  JOIN house_assignment As ha ON h.f_id=ha.a_house  JOIN users As u ON h.f_user=u.u_id where ha.a_house='".$id."'  order by ha.a_id DESC LIMIT 1",'array',true),
+                            'datas'         => $this->general->query("select * from house_assignment_comment As cm  JOIN users As u ON cm.hc_user=u.u_id where cm.hc_status=1 and cm.hc_filial='".$id."' order by cm.hc_id DESC LIMIT 1",'array',true),
+                            'tasks'         => $this->general->all_get('house_assignment_comment_task',['hct_filial' => $id,'hrc_status' => 1],[],'array')
+                        ));
+                    }
 
                     else  if($page == 'comment_view_filial') {
 

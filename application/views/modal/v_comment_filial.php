@@ -11,16 +11,9 @@ $c_name      = $this->class_security->validate_var($datasComment,'u_name');
 $c_comment   = $this->class_security->validate_var($datasComment,'a_observation_clean');
 $c_date      = $this->class_security->validate_var($datasComment,'a_ending');
 ?>
-
-<form role="form" data-toggle="validator" method="POST" class="frm_data" id="frm_data">
-    <input type="hidden" name="filial" value="<?=$id?>" />
     <div class="modal-body">
-        <?php
-        if(in_array($this->user_data->u_profile,[4,14])): ?>
-            <h3>Comentario Recepción</h3>
 
-
-
+            <h3 class="text-center mb-3">Comentario Recepción</h3>
             <div class="row mb-3">
                 <div class="form-group col">
                     <label>Filial</label>
@@ -34,43 +27,28 @@ $c_date      = $this->class_security->validate_var($datasComment,'a_ending');
 
             </div>
 
-            <div class="row mb-3">
-                <div class="form-group col">
-                    <label>Comentario</label>
-                    <textarea rows="6" name="observation" autofocus  class="form-control imput_reset" autocomplete="off"><?=$comment?></textarea>
-                </div>
-            </div>
 
             <hr>
 
-            <div class="row mb-3">
-                <div class="col-12 text-center">
-                    <button type="button" id="generate_task" class="btn btn-rounded btn-primary btn-lg">
-                        <span class="btn-icon-left text-primary"><i class="fa fa-user-doctor"></i></span> AGREGAR TAREAS
-                    </button>
-                </div>
-            </div>
 
-        <div class="row">
+        <div class="row mb-3">
             <div class="table-responsive">
-                <table class="table table-bordered table-responsive-md text-center">
+                <table class="table table-bordered table-responsive-md text-left">
                     <thead>
                     <tr>
-                        <th><strong>Nombre de Tarea</strong></th>
                         <th class="width80">#</th>
+                        <th><strong>Nombre de Tarea</strong></th>
                     </tr>
                     </thead>
                     <tbody class="task" id="task">
                     <?php
-
+                    $i = 1;
                     if(isset($tasks) and is_array($tasks) and count($tasks) >= 1):
                         foreach ($tasks as $key => $value): ?>
                             <tr>
+                                <td><strong class="text-black"><?=$i++;?></strong></td>
                                 <td>
-                                    <input type="text" name="task[]" class="form-control form-control-lg border-dark" value="<?=$value['hcr_title']?>" />
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-danger btn-lg delete_element"><i class="fas fa-times"></i></button>
+                                    <input type="text" readonly  class="form-control form-control-lg border-dark" value="<?=$value['hcr_title']?>" />
                                 </td>
                             </tr>
                         <?php
@@ -84,11 +62,17 @@ $c_date      = $this->class_security->validate_var($datasComment,'a_ending');
         </div>
 
 
-        <?php
+            <div class="row mb-3">
+                <div class="form-group col">
+                    <label>Comentario Recepción</label>
+                    <textarea rows="6" disabled autofocus  class="form-control imput_reset" autocomplete="off"><?=$comment?></textarea>
+                </div>
+            </div>
 
-        endif;
 
-        if($this->user_data->u_profile != 3): ?>
+<!--        --><?php //if($this->user_data->u_profile != 3):
+            if($c_comment != ''):
+        ?>
             <hr />
 
             <h3>Ultimo Comentario de la tarea Asignada</h3>
@@ -119,63 +103,17 @@ $c_date      = $this->class_security->validate_var($datasComment,'a_ending');
 
 
 
-        <?php
-        endif;
-        ?>
+        <?php   endif;   ?>
     </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar Proceso</button>
-
-        <?php
-        if(in_array($this->user_data->u_profile,[4,14])): ?>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-        <?php
-        endif;
-        ?>
     </div>
-</form>
 
 <script>
     $(document).ready(function () {
         //remove size modal
         $(this).clear_modal_view("modal-1000");
 
-        document.getElementById('generate_task').addEventListener('click', function () {
-            var table = document.getElementById('task');
-            var newRow = document.createElement('tr');
-            newRow.innerHTML =
-                '<td><input type="text" name="task[]" class="form-control form-control-lg border-dark" /></td>' +
-                '<td><button type="button"  class="btn btn-danger btn-lg delete_element"><i class="fas fa-times"></i></button></td>';
-            table.appendChild(newRow);
-        })
-
-
-        document.addEventListener('click', function (e) {
-            // Verifica si el clic fue en un botón con la clase 'delete_element'
-            if (e.target.matches('.delete_element') || e.target.closest('.delete_element')) {
-                const button = e.target.closest('.delete_element');
-                const row = button.closest('tr');
-                if (row) {
-                    row.remove();
-                }
-            }
-        });
-
-
-
-
-        $("#frm_data")
-            .validator()
-            .on("submit", function (e) {
-                if (e.isDefaultPrevented()) {
-                    $(this).mensaje_alerta(1, "El campo es obligatorio");
-                    return false;
-                } else {
-                    e.preventDefault();
-                    $(this).simple_call("frm_data", "url_save");
-                    return false;
-                }
-            });
     });
 </script>

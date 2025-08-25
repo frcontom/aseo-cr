@@ -224,6 +224,7 @@ $(document).ready(function() {
                     }else{
                         $(this).mensaje_alerta(1, rep.msg);
                     }
+                    socket.emit("fills_form", {filial: obj.id});// Emitir el evento después de la acción
                     setTimeout(function () {
                         window.location.reload();
                     }, 1000);

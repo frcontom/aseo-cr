@@ -304,28 +304,65 @@ JOIN house As h2 ON h.a_house = h2.f_id where DATE_FORMAT(a_assigner,'%Y-%m-%d')
 
                 if($filial != '' && $status != '' && $type != ''  && $hour != '') {
 
-                    $fls = $this->general->get('house', array('f_id' => $filial),'array');
-                    if(count($fls) >= 1){
-                        //validar la asignacion si esta ya esta ejecutada se actualiza si no se crea
-                        $data = array(
-                            'a_user'    => $user,
-                            'a_house'   => $filial,
-                            'a_status'  => $status,
-                            'a_status_service'  => 1,
-                            'a_code'    => $this->class_security->generate_code(6),
-                            'a_time'    => $hour,
-                            'a_assigner'=> fecha(2),
-                            'a_atcreate'=> fecha(2),
-                        );
-                        $this->general->create_update('house_assignment',[
-                            'a_house' => $filial,
-                            'a_status_service' => 1
-                        ],$data);
+//                    $fls = $this->general->get('house', array('f_id' => $filial),'array');
 
-//                        $userd = $this->general->get('users',array('u_id' => $user),'array');
+                    $fls = $this->general->query("select * from house As h
+         LEFT JOIN house_assignment As ha On h.f_id=ha.a_house and ha.a_status_service=3 and ha.a_revision_status=1
+         LEFT JOIN house_assignment_revision As hr ON ha.a_id=hr.har_assignment
+         WHERE h.f_id='{$filial}'",'array',true);
+                    if(isset($fls) and count($fls) >= 1) {
+
+
+                        //Validar si la asignacion ya esta en revision y con asignacion para regresar la data
+                        if(isset($fls['a_revision_status']) and $fls['a_revision_status'] == 1){
+
+
+//                            exit;
+                            //regresar la filial al estado previo
+                            $this->general->update('house',array('f_id' => $filial),array('f_status_actual' => $fls['har_before_status']));
+
+//                            //actualizar la asignacion
+                            $this->general->update('house_assignment',array('a_id' => $fls['a_id'],'a_house' => $filial),array('a_user' => $user,'a_status_service' => 1));
+//
+//                            //regresar el estado del comentario
+                            $this->general->update('house_assignment_comment',array('hc_assignment' => $fls['a_id']),array('hc_status' => 1));
+//
+//                            //actualizar la asignacion de tareas
+                            $this->general->update('house_assignment_comment_task',['hct_filial' => $filial,'hct_assignment' => $fls['a_id']],['hrc_status' => 1,'hcr_user' => '']);
+
+                            $userd = $this->general->all_get('users',['u_id' => $user],[],'array',[],[],'u_id,u_phone');
+                            $job_data = array(
+                                'message' => "Realizar limpieza en la Habitación {$fname}",
+                                'data' => $userd
+                            );
+                            $this->queue->enqueue('send_whatsapp', 'Notifications', $job_data);  // Agregar trabajo a la cola
+
+                        }else{
+                            // registrar la asignacion para limpieza con el status que tiene
+
+                            //Validar si la habitacion ya esta asignada a otro usuario o si no tiene asignacion para actualizar o crear
+
+
+
+                            $data = array(
+                                'a_user'    => $user,
+                                'a_house'   => $filial,
+                                'a_status'  => $status,
+                                'a_status_service'  => 1,
+                                'a_revision_status' => 1,
+                                'a_code'    => $this->class_security->generate_code(6),
+                                'a_time'    => $hour,
+                                'a_assigner'=> fecha(2),
+                                'a_atcreate'=> fecha(2),
+                            );
+
+                            $this->general->create_update('house_assignment',[
+                                'a_house' => $filial,
+                                'a_status_service' => 1
+                            ],$data);
+                        }
+
                         $userd = $this->general->all_get('users',['u_id' => $user],[],'array',[],[],'u_id,u_phone');
-//                        sendNotification('Vora',"Realizar limpieza en la Habitación {$fname}",$userd);
-
                         $job_data = array(
                             'message' => "Realizar limpieza en la Habitación {$fname}",
                             'data' => $userd
@@ -333,10 +370,14 @@ JOIN house As h2 ON h.a_house = h2.f_id where DATE_FORMAT(a_assigner,'%Y-%m-%d')
                         $this->queue->enqueue('send_whatsapp', 'Notifications', $job_data);  // Agregar trabajo a la cola
 
 
-                        $this->result =  ['success' => 1,'status' => $userd['u_notify']];
+                        $this->result =  ['success' => 1,'filial' => $filial];
+
                     }else{
-                        $this->result = array('success' => 2,'msg' => 'Lo siento la filial no existe');
+
+                        $this->result = array('success' => 2,'msg' => 'Lo siento no se puede RE-asignar la habitación');
                     }
+
+
 
                 }else{
                     $this->result = array('success' => 2,'msg' => 'Campos Obligatorios 1');
@@ -497,9 +538,12 @@ JOIN house As h2 ON h.a_house = h2.f_id where DATE_FORMAT(a_assigner,'%Y-%m-%d')
                 $filial         = $this->class_security->data_form('filial','int');
                 $assignment     = $this->class_security->data_form('assignment','int');
                 $task_status    = $this->class_security->data_form('task_status','int');
-                $task    = $this->class_security->data_form('task','alone');
+                $task           = $this->class_security->data_form('task','alone');
 
 
+
+//                print_r($task);
+//                exit;
                 //validar si existe la asignacion
                 $data = $this->general->query("select * from house_assignment As ha JOIN house_assignment_revision As hr ON ha.a_id=hr.har_assignment WHERE ha.a_house='{$filial}' and ha.a_id='{$assignment}'",'array',true);
                 if(isset($data) and count($data) >= 1) {
@@ -531,6 +575,9 @@ JOIN house As h2 ON h.a_house = h2.f_id where DATE_FORMAT(a_assigner,'%Y-%m-%d')
                         //cambiar el estado de la filial al inverso
                         $status_work = $this->class_security->change_status_clean($data['har_before_status']);
                         $this->general->update('house',array('f_id' => $filial),array('f_status_actual' => $status_work));
+
+                        //regresar el estado del comentario
+                        $this->general->update('house_assignment_comment',array('hc_assignment' => $assignment),array('hc_status' => 2));
 
                         //cambiar el estado de la asignacion
                         $this->general->update('house_assignment',array('a_id' => $assignment,'a_house' => $filial),array('a_revision_status' => 2,'a_complete' => 2));

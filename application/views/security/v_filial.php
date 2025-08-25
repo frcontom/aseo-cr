@@ -50,7 +50,7 @@ foreach($filials as $filial){
                             <div class='col btn-group'>
                             ";
 
-                            $template .= "<button class='btn btn-sm btn-primary w-50' {$btn_disabled} onclick='$(this).forms_modal({\"page\" : \"comment_view_filial\",\"data1\" : \"{$id}\",\"title\" : \"Comentarios\"})'><i class='fas fa-comment'></i> Comentario</button>";
+                            $template .= "<button class='btn btn-sm btn-primary w-50' {$btn_disabled} onclick='$(this).forms_modal({\"page\" : \"comment_asigne_filial\",\"data1\" : \"{$id}\",\"title\" : \"Comentarios\"})'><i class='fas fa-comment'></i> Comentario</button>";
 //                            $template .= "<button class='btn btn-sm btn-primary w-50' onclick='$(this).assigne_comment($fiObj)' >Mi Comentario</button>";
                             if($filial->a_status_service != '' || $filial->a_status_service != null):
 

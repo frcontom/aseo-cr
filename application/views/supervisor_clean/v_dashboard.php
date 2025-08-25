@@ -19,7 +19,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <div class="row all_filials">
 <?php
-//print_r($status);exit;
+//print_r($filials);exit;
  foreach ($status As $statu):
      /*
       * Validar que el usuario de asignacion sea null para saber que pertenece a su dueño

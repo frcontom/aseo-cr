@@ -2,7 +2,7 @@ self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open('biometric-cache').then((cache) => {
             return cache.addAll([
-                '/biometric',
+                '/biometric/faceid',
                 '/script.js',
                 '/logo.png',
                 '/icon-512x512.png'

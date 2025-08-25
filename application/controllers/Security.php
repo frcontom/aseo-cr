@@ -43,11 +43,25 @@ class Security extends CI_Controller
 //                    ];
 //
 //                }
-                if($status != 1):
+//                if($status != 90):
                     //assigne clean door
-                    $fls = $this->general->get('house', array('f_id' => $id),'array');
+//                    $fls = $this->general->get('house', array('f_id' => $id),'array');
+                $fls = $this->general->query("select CASE
+                    WHEN ha.a_user = null THEN h.f_user
+                     WHEN h.f_user <> ha.a_user THEN ha.a_user
+                     ELSE h.f_user
+                     END as f_user from house As h
+         LEFT JOIN house_assignment As ha On h.f_id=ha.a_house and ha.a_status_service IN(1,2) and ha.a_revision_status=1
+         LEFT JOIN house_assignment_revision As hr ON ha.a_id=hr.har_assignment
+         WHERE h.f_id='{$id}'",'array',true);
+
                     if(count($fls) >= 1) {
                         //validar la asignacion si esta ya esta ejecutada se actualiza si no se crea
+
+
+                        //tener en cuenta que si la falial ya tiene una asignacion y fue re-asignada permanece el usuario actual para esa asignacion si no el nuevo
+
+
                         $data = array(
                             'a_user' => $fls['f_user'],
                             'a_house' => $id,
@@ -104,9 +118,9 @@ class Security extends CI_Controller
                     $this->result =  $this->general->update('house',array('f_id' => $id),['f_status_actual' => $status]);
 
 
-                else:
-                    $this->result = array('success' => 1,'filial' => $id,'msg' => 'La habitación ya se encuentra libre');
-            endif;
+//                else:
+//                    $this->result = array('success' => 1,'filial' => $id,'msg' => 'La habitación ya se encuentra libre');
+//            endif;
 
 
             }else{
@@ -144,7 +158,7 @@ class Security extends CI_Controller
         }
         api($this->result);
     }
-            function comment_add(){
+    function comment_add(){
 
         if($this->input->post()){
             if($this->class_security->validate_post(array('fname','filial'))){
@@ -157,12 +171,12 @@ class Security extends CI_Controller
 //
 
 
-
-                if(strlen($observation) == 0){
-                    //delete comment and task
-                    $this->general->delete('house_assignment_comment',['hc_filial' => $id]);
-//                    $this->general->delete('house_assignment_comment_task',['hct_filial' => $id]);
-                }else{
+//
+//                if(strlen($observation) == 0){
+//                    //delete comment and task
+//                    $this->general->delete('house_assignment_comment',['hc_filial' => $id]);
+////                    $this->general->delete('house_assignment_comment_task',['hct_filial' => $id]);
+//                }else{
 
 
                     $queryEmail = $this->general->all_get('users',['u_profile' => 6],[],'array',[],[],'u_id,u_phone');
@@ -185,10 +199,8 @@ class Security extends CI_Controller
                     ));
 
 //                    $comnet_id  = $comment['data'];
-
+                    $this->general->delete('house_assignment_comment_task',['hct_filial' => $id]);//Delete previous task
                     if(isset($task) and is_array($task) and count($task) >= 1){
-                        //delete old task
-                        $this->general->delete('house_assignment_comment_task',['hct_filial' => $id]);
                         foreach ($task as $key => $value){
                             if(strlen($value) > 1){
                                 $this->general->create('house_assignment_comment_task',[
@@ -200,9 +212,9 @@ class Security extends CI_Controller
                             }
                         }
                     }
-                }
+//                }
 //                else{
-                    $this->result = array('success' => 1);
+                    $this->result = array('success' => 1,'filial' => $id,'msg' => 'Comentario Agregado');
 //                }
             }else{
                 $this->result = array('success' => 2,'msg' => 'Campos Obligatorios');

@@ -13,6 +13,24 @@ $c_name      = $this->class_security->validate_var($datas,'u_name');
 $c_comment   = $this->class_security->validate_var($datas,'a_observation_clean');
 $c_date      = $this->class_security->validate_var($datas,'a_ending');
 
+
+
+$tasks_1 = array_filter($tasks, function($item) { return $item['hcr_type'] == 1; });
+$tasks_2 = array_filter($tasks, function($item) { return $item['hcr_type'] == 2; });
+
+//print_r($tasks_2);
+
+if(isset($tasks_default) and count($tasks_default)>0){
+    $taks_dfl = array_map(function($item){
+        return [
+            'hct_id' => $item['tk_id'],
+            'hcr_title' => $item['tk_name'],
+        ];
+    },$tasks_default);
+}
+
+
+$taks_join = array_merge($taks_dfl,$tasks);
 ?>
 
 <style>
@@ -33,6 +51,7 @@ $c_date      = $this->class_security->validate_var($datas,'a_ending');
 
 
         <?php
+        echo $comment;
             if(isset($comment) and $comment != '' and $comment != null):
         ?>
             <h3>Comentario Recepción</h3>
@@ -94,10 +113,6 @@ $c_date      = $this->class_security->validate_var($datas,'a_ending');
 
         ?>
 
-
-
-
-
             <div class="row mb-3">
 
                 <div class="form-group col">
@@ -120,7 +135,7 @@ $c_date      = $this->class_security->validate_var($datas,'a_ending');
 
             endif;
 
-            if(isset($tasks) and is_array($tasks) and count($tasks) >= 1):
+//            if(isset($tasks) and is_array($tasks) and count($tasks) >= 1):
 
                 $operative_tasks = ( $status_service == 1) ? 'disabled' : 'required';
                 ?>
@@ -133,24 +148,60 @@ $c_date      = $this->class_security->validate_var($datas,'a_ending');
             </div>
 
                   <div class="row mb-3">
-                      <?php
-                      $i = 0;
-                        foreach ($tasks as $value) {
+                      <div class="col-6">
 
-                            $task_name = $this->class_security->validate_var($value,'hcr_title');
-                            $task_id = $this->class_security->validate_var($value,'hct_id');
+                          <div class="col-12 my-3">
+                              <h3 class="text-danger">Tareas Asignadas</h3>
+                          </div>
 
-                            echo '<div class=" col-12"><div class="form-check custom-checkbox mb-3">';
-                            echo '<input type="hidden"  name="task['.$i.'][id]" value="'.$task_id.'"> <input type="checkbox" '.$operative_tasks.' class="form-check-input" id="customCheckBox'.$i.'" name="task['.$i.'][tk]"  onchange="toggleTask(this)" />  <h3 class="form-check-label ml-2" for="customCheckBox1">'.$task_name.'</h3>';
-                            echo '</div></div>';
+                          <?php
+                          $i = 0;
+                          foreach ($tasks_1 as $value) {
+
+                              $task_name = $this->class_security->validate_var($value,'hcr_title');
+                              $task_id = $this->class_security->validate_var($value,'hct_id');
+
+                              echo '<div class=" col-12"><div class="form-check custom-checkbox mb-3">';
+                              echo '<input type="hidden"  name="task['.$i.'][id]" value="'.$task_id.'"> <input type="checkbox" '.$operative_tasks.' class="form-check-input" id="customCheckBox'.$i.'" name="task['.$i.'][tk]"  onchange="toggleTask(this)" />  <h3 class="form-check-label ml-2" for="customCheckBox1">'.$task_name.'</h3>';
+                              echo '</div></div>';
+                              $i++;
+                          }
+                          ?>
+
+                      </div>
+
+                      <div class="col-6">
+
+                          <div class="col-12 my-3">
+                              <h3 class="text-danger">Tareas Por Defecto</h3>
+                          </div>
+
+                          <?php
+                          $i = (isset($tasks_1) and count($tasks_1) > 0) ? count($tasks_1) : 0;
 
 
-                            $i++;
+                          $tasks_save_or_default = (isset($tasks_create_2) and count($tasks_create_2) > 0) ? $tasks_2 : $taks_dfl;
 
-                        }
-                      ?>
+                          foreach ($tasks_save_or_default as $value) {
+
+                              $task_name = $this->class_security->validate_var($value,'hcr_title');
+                              $task_id = $this->class_security->validate_var($value,'hct_id');
+
+                              echo '<div class=" col-12"><div class="form-check custom-checkbox mb-3">';
+                              echo '<input type="hidden"  name="task['.$i.'][id]" value="'.$task_id.'"> <input type="checkbox" '.$operative_tasks.' class="form-check-input" id="customCheckBox'.$i.'" name="task['.$i.'][tk]"  onchange="toggleTask(this)" />  <h3 class="form-check-label ml-2" for="customCheckBox1">'.$task_name.'</h3>';
+                              echo '</div></div>';
+                              $i++;
+                          }
+                          ?>
+
+                      </div>
+
+
+
                   </div>
-            <?php endif; ?>
+
+
+<!--            --><?php //endif; ?>
 
     </div>
 

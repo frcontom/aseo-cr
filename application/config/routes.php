@@ -17,6 +17,7 @@ $route['tickets']           = 'maintenance/ticket_local';
 $route['task_local']        = 'maintenance/task_local';
 $route['bother_status']     = 'assignment/bother_status';
 $route['chart']             = 'modular/chart';
+$route['tasks']             = 'modular/tasks';
 
 //booking
 $route['booking']   = 'booking';

@@ -32,7 +32,18 @@ socket.on("fills_form", (data) => {
     // $(".all_filials").find('[data-id="'+data.filial+'"]').load(location.href+" .all_filials > [data-id='"+data.filial+"']>*","");
     // $(`#filial-id-${data.filial}`).load(location.href + ` #filial-id-${data.filial}>*`, "");
 
-    $("#all_filials").load(location.href+" #all_filials>*","");
+
+    // Verificar si existe el elemento #filial_window_all
+    if ($("#filial_window_all").length) {
+        // Si existe, actualizar el sector completo #all_filials
+        $("#filial_window_all").load(location.href + " #filial_window_all>*", "");
+    } else {
+        // Si no existe, realizar la actualización basada en data.filial
+        $(`#filial-id-${data.filial}`).load(location.href + ` #filial-id-${data.filial}>*`, "");
+    }
+
+
+    // $("#all_filials").load(location.href+" #all_filials>*","");
     // $.get(location.href, function(data) {
     //     var newContent = $(data).find('#all_filials').html();
     //     // $('#all_filials').html(newContent);

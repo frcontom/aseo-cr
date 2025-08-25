@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-$name          = $this->class_security->validate_var($datas,'u_name');
+$user_asigne          = $this->class_security->validate_var($datas,'user_asigne');
+$user_resolved          = $this->class_security->validate_var($datas,'user_resolved');
 $atcreate      = $this->class_security->validate_var($datas,'hc_atcreate');
 //$comment_id       = $this->class_security->validate_var($datas,'hc_id');
 $comment       = $this->class_security->validate_var($datas,'hc_comment');
@@ -14,6 +15,15 @@ $a_id     = $this->class_security->validate_var($datas,'a_id');
 $c_name      = $this->class_security->validate_var($datas,'u_name');
 $c_comment   = $this->class_security->validate_var($datas,'a_observation_clean');
 $c_date      = $this->class_security->validate_var($datas,'a_ending');
+
+//timer data
+$total_time      = $this->class_security->validate_var($timer_task,'total_time');
+
+
+
+$tasks_1 = array_filter($tasks, function($item) { return $item['hcr_type'] == 1; });
+$tasks_2 = array_filter($tasks, function($item) { return $item['hcr_type'] == 2; });
+
 ?>
 
 <style>
@@ -44,7 +54,7 @@ $c_date      = $this->class_security->validate_var($datas,'a_ending');
 
                 <div class="form-group col">
                     <label>Usuario Creador</label>
-                    <input type="text" disabled autofocus value="<?=$name?>" class="form-control imput_reset" autocomplete="off">
+                    <input type="text" disabled autofocus value="<?=$user_asigne?>" class="form-control imput_reset" autocomplete="off">
                 </div>
 
                 <div class="form-group col">
@@ -65,11 +75,6 @@ $c_date      = $this->class_security->validate_var($datas,'a_ending');
 
             <hr>
 
-
-
-
-
-
         <?php endif; ?>
 
         <div class="row my-3">
@@ -82,13 +87,23 @@ $c_date      = $this->class_security->validate_var($datas,'a_ending');
         <div class="row mb-3">
 
             <div class="form-group col">
-                <label>Filial</label>
+                <label>Mucama</label>
+                <input type="text" disabled autofocus value="<?=$user_resolved?>" class="form-control imput_reset" autocomplete="off">
+            </div>
+
+            <div class="form-group col">
+                <label>Habitación</label>
                 <input type="text" name="fname" readonly  autofocus value="<?=$f_name?>" class="form-control imput_reset" autocomplete="off">
             </div>
 
             <div class="form-group col">
                 <label>Piso</label>
                 <input type="text" disabled autofocus value="<?=$fr_name?>" class="form-control imput_reset" autocomplete="off">
+            </div>
+
+            <div class="form-group col">
+                <label>Tiempo Estimado</label>
+                <input type="text" disabled autofocus value="<?=$total_time?>" class="form-control imput_reset text-center" autocomplete="off">
             </div>
 
         </div>
@@ -129,23 +144,58 @@ $c_date      = $this->class_security->validate_var($datas,'a_ending');
             </div>
 
             <div class="row mb-3">
-                <?php
-                $i = 0;
-                foreach ($tasks as $value) {
+                <div class="col-6">
 
-                    $task_name = $this->class_security->validate_var($value,'hcr_title');
-                    $task_id = $this->class_security->validate_var($value,'hct_id');
+                    <div class="col-12 my-3">
+                        <h3 class="text-danger">Tareas Asignadas</h3>
+                    </div>
 
-                    $task_status = ($value['hrc_status'] == 2) ? 'checked' : '';
+                    <?php
+                    $i = 0;
+                    foreach ($tasks_1 as $value) {
 
-                    echo '<div class=" col-12"><div class="form-check custom-checkbox mb-3">';
-                    echo '<input type="hidden"  name="task['.$i.'][id]" value="'.$task_id.'"> <input type="checkbox" '.$task_status.'  class="form-check-input" id="customCheckBox'.$i.'" name="task['.$i.'][tk]"  onchange="toggleTask(this)" />  <h3 class="form-check-label ml-2 completed" >'.$task_name.'</h3>';
-                    echo '</div></div>';
-                    $i++;
+                        $task_name = $this->class_security->validate_var($value,'hcr_title');
+                        $task_id = $this->class_security->validate_var($value,'hct_id');
+                        $task_status = ($value['hrc_status'] == 2) ? 'checked' : '';
 
-                }
-                ?>
+                        echo '<div class=" col-12"><div class="form-check custom-checkbox mb-3">';
+                        echo '<input type="hidden"  name="task['.$i.'][id]" value="'.$task_id.'"> <input type="checkbox" '.$task_status.'  class="form-check-input" id="customCheckBox'.$i.'" name="task['.$i.'][tk]"  onchange="toggleTask(this)" />  <h3 class="form-check-label ml-2  completed" >'.$task_name.'</h3>';
+                        echo '</div></div>';
+                        $i++;
+                    }
+                    ?>
+
+                </div>
+
+                <div class="col-6">
+
+                    <div class="col-12 my-3">
+                        <h3 class="text-danger">Tareas Por Defecto</h3>
+                    </div>
+
+                    <?php
+                    $i = (isset($tasks_1) and count($tasks_1) > 0) ? count($tasks_1) : 0;
+                    foreach ($tasks_2 as $value) {
+
+                        $task_name = $this->class_security->validate_var($value,'hcr_title');
+                        $task_id = $this->class_security->validate_var($value,'hct_id');
+                        $task_status = ($value['hrc_status'] == 2) ? 'checked' : '';
+
+                        echo '<div class=" col-12"><div class="form-check custom-checkbox mb-3">';
+                        echo '<input type="hidden"  name="task['.$i.'][id]" value="'.$task_id.'"> <input type="checkbox" '.$task_status.'  class="form-check-input" id="customCheckBox'.$i.'" name="task['.$i.'][tk]"  onchange="toggleTask(this)" />  <h3 class="form-check-label ml-2  completed">'.$task_name.'</h3>';
+                        echo '</div></div>';
+                        $i++;
+                    }
+                    ?>
+
+                </div>
+
+
+
             </div>
+
+
+
         <?php endif; ?>
 
     </div>
@@ -156,11 +206,6 @@ $c_date      = $this->class_security->validate_var($datas,'a_ending');
             <button type="button" onclick="change_status_task(1)" class="btn btn-primary">Regresar Tarea</button>
             <button type="button" onclick="change_status_task(2)" class="btn btn-success">Finalizar Revision</button>
             <button type="submit" id="submits" class="btn btn-success d-none">.</button>
-
-
-
-
-
     </div>
 </form>
 
@@ -184,8 +229,6 @@ $c_date      = $this->class_security->validate_var($datas,'a_ending');
     $(document).ready(function() {
         //remove size modal
         $(this).clear_modal_view('modal-1000');
-
-
 
 
         $('#frm_data').validator().on('submit', function(e) {

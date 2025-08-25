@@ -1747,17 +1747,25 @@ WHERE p.b_status NOT IN(4,99,88) AND p.pf_propertie IN (SELECT up_propertie FROM
     );
 ");
 
+                echo "
+select DISTINCT r.r_id,r.r_name,r.r_color,pd.bd_day As 'pf_date',p.b_booking_type As module,'' As type
+from booking As p
+    LEFT JOIN booking_events As e ON p.b_id=e.e_proforma and e.e_status != 4
+    JOIN booking_days As pd ON p.b_id=pd.bd_booking
+    JOIN rooms As r ON pd.bd_room=r.r_id
+WHERE p.b_status NOT IN(4,99,88) AND p.pf_propertie IN (SELECT up_propertie FROM users_properties WHERE up_user = {$this->user_data->u_id})
+ AND
+    (
+        (p.b_booking_type IN (4))
+           OR
+        (p.b_type = 4 and p.b_booking_type = 1 and pd.bd_type != '')
+    -- Si no es tipo 2 o 4, mostrar los datos sin filtro adicional
+            OR
+        p.b_booking_type IN (1,2)
+    );
+";
 
 
-
-//                $datas = $this->general->query("
-//select DISTINCT r.r_id,r.r_name,r.r_color,pd.bd_day As 'pf_date',p.b_booking_type As module,'' As type
-//from booking As p
-//    LEFT JOIN booking_events As e ON p.b_id=e.e_proforma and e.e_status != 4
-//    JOIN booking_days As pd ON p.b_id=pd.bd_booking
-//    JOIN rooms As r ON pd.bd_room=r.r_id
-//WHERE p.b_status NOT IN(4,99) and p.b_booking_type IN(1,2,4)
-//");
                 $this->result = array('success' => 1,'data' => $datas);
 
             }else{
