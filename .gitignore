@@ -1,1 +1,4 @@
 _files/
+# Ignorar archivos de configuración específicos
+/application/config/database.php
+/application/config/cproject.php
